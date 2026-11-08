@@ -1,8 +1,10 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Home from './pages/Home';
 import Favorites from './pages/Favorites';
+import Watchlist from './pages/Watchlist';
+import { MovieProvider } from './contexts/MovieContext';
 import './App.css';
 
 function App() {
@@ -12,18 +14,22 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
-    <Router>
-      <div className="app">
-        <Header setSearchResults={setSearchResults} setSearchQuery={setSearchQuery} />
-        <Routes>
-          <Route
-            path="/"
-            element={<Home searchResults={searchResults} searchQuery={searchQuery} />}
-          />
-          <Route path="/favorites" element={<Favorites />} />
-        </Routes>
-      </div>
-    </Router>
+    // Step 3: MovieProvider wraps everything so every page can use the watchlist
+    <MovieProvider>
+      <Router>
+        <div className="app">
+          <Header setSearchResults={setSearchResults} setSearchQuery={setSearchQuery} />
+          <Routes>
+            <Route
+              path="/"
+              element={<Home searchResults={searchResults} searchQuery={searchQuery} />}
+            />
+            <Route path="/watchlist" element={<Watchlist />} />
+            <Route path="/favorites" element={<Favorites />} />
+          </Routes>
+        </div>
+      </Router>
+    </MovieProvider>
   );
 };
 

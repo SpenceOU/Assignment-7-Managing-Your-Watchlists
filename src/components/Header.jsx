@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { searchMovies } from '../services/movieService';
+import { useMovieContext } from '../contexts/MovieContext';
 
 function Header({ setSearchResults, setSearchQuery }) {
   const [query, setQuery] = useState('');
   const navigate = useNavigate();
+  const { watchlist } = useMovieContext();
 
   const runSearch = async (text) => {
     const trimmed = text.trim();
@@ -52,6 +54,7 @@ function Header({ setSearchResults, setSearchQuery }) {
         <Link to="/" className="app-title" onClick={clearSearch}>MovieShelf</Link>
         <nav className="nav-links">
           <Link to="/" className="nav-link" onClick={clearSearch}>Home</Link>
+          <Link to="/watchlist" className="nav-link">Watchlist ({watchlist.length})</Link>
           <Link to="/favorites" className="nav-link">Favorites</Link>
         </nav>
         <form className="search-container" onSubmit={handleSubmit}>

@@ -1,5 +1,6 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { isFavorite, addFavorite, removeFavorite } from '../services/favoritesService';
+import { useMovieContext } from '../contexts/MovieContext';
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 const PLACEHOLDER = 'https://placehold.co/300x450/667eea/ffffff?text=No+Poster';
@@ -7,6 +8,18 @@ const PLACEHOLDER = 'https://placehold.co/300x450/667eea/ffffff?text=No+Poster';
 function MovieCard({ movie, onFavoriteChange }) {
   // Check localStorage once so the button shows the right state on load
   const [favorited, setFavorited] = useState(() => isFavorite(movie.id));
+
+  // Step 6: watchlist comes from Context instead of props
+  const { isInWatchlist, addToWatchlist, removeFromWatchlist } = useMovieContext();
+  const inWatchlist = isInWatchlist(movie.id);
+
+  const handleWatchlistClick = () => {
+    if (inWatchlist) {
+      removeFromWatchlist(movie.id);
+    } else {
+      addToWatchlist(movie);
+    }
+  };
 
   const handleFavoriteClick = () => {
     if (favorited) {
@@ -43,6 +56,12 @@ function MovieCard({ movie, onFavoriteChange }) {
           onClick={handleFavoriteClick}
         >
           {favorited ? '♥ Remove from Favorites' : '♡ Add to Favorites'}
+        </button>
+        <button
+          className={`watchlist-button ${inWatchlist ? 'in-watchlist' : ''}`}
+          onClick={handleWatchlistClick}
+        >
+          {inWatchlist ? '✓ Remove from Watchlist' : '+ Add to Watchlist'}
         </button>
       </div>
     </div>
